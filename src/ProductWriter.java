@@ -7,7 +7,6 @@ import static java.nio.file.StandardOpenOption.CREATE;
 
 import java.util.Locale;
 import java.util.Scanner;
-import java.util.ArrayList;
 
 public class ProductWriter {
 
@@ -15,6 +14,9 @@ public class ProductWriter {
 
         // initializing scanner
         Scanner scanner = new Scanner(System.in);
+
+        // I had to put this in here because as it turns out, my computer thinks I'm in France, meaning the number
+        // 10.5 would have to be written as 10,5 (using commas) which would break the program
         scanner.useLocale(Locale.ROOT);
 
         // for storing all products
@@ -33,7 +35,7 @@ public class ProductWriter {
             // now it can continue on to getting the input
 
             // for controlling the input loop
-            boolean createNewProduct = false;
+            boolean createNewProduct;
 
             do {
                 // variables for storing product elements
@@ -46,10 +48,11 @@ public class ProductWriter {
                 id = SafeInput.getRegExString(scanner, "Enter an ID number", "[0-9]+[^,]?");
 
                 // prompts for product name and stores it
-                name = SafeInput.getRegExString(scanner, "Enter product name", "[^,]+");
+                name = SafeInput.getRegExString(scanner, "Enter product name", ".+[^,]");
+
 
                 // prompts for description and stores it
-                description = SafeInput.getRegExString(scanner, "Enter a description (NOTE: description cannot contain commas.)", "[^,]+");
+                description = SafeInput.getRegExString(scanner, "Enter a description (NOTE: description cannot contain commas.)", ".+[^,]");
 
                 // prompts for cost and stores it
                 cost = SafeInput.getDouble(scanner, "Enter a cost (without any currency symbols)");

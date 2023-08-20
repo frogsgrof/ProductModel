@@ -238,8 +238,7 @@ public class SafeInput {
 
         do {
             System.out.print("\n" + prompt + ":\n"); // print prompt
-            retString = pipe.next(); // store input
-            pipe.nextLine(); // clear pipe
+            retString = pipe.nextLine(); // store input
 
             /*
             take the String version of a regex pattern that was passed into the method & turn it into
