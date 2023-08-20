@@ -24,7 +24,7 @@ public class ProductReader {
         if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 
             // instantiates the ArrayList of text file contents
-            ArrayList<String> products = new ArrayList<>();
+            ArrayList<String> productData = new ArrayList<>();
 
             // reads the file
             Path path = jFileChooser.getSelectedFile().toPath();
@@ -38,7 +38,7 @@ public class ProductReader {
 
                     // stores each line in a new String, then adds it to the list
                     String line = bufferedReader.readLine();
-                    products.add(line);
+                    productData.add(line);
                 }
                 bufferedReader.close(); // closes the reader afterwards
 
@@ -46,52 +46,33 @@ public class ProductReader {
                 throw new RuntimeException(e);
             }
 
+            // for storing products
+            ArrayList<Product> products = new ArrayList<>();
+
+            // array for storing split Strings
+            String[] split;
+
+            // iterates through each line of the file
+            for (String line : productData) {
+
+                // splits the current line into the array
+                split = line.split(", ", 4);
+
+                // constructs product and adds it to the list
+                Product product = new Product(split[0], split[1], split[2], Double.parseDouble(split[3]));
+                products.add(product);
+            }
+
             // prints table header
             System.out.printf("%8s   %16s   %55s   %8s%n", "ID", "NAME", "DESCRIPTION", "PRICE");
             int len = 8 + 16 + 55 + 8 + 9;
             for (int i = 0; i < len; i++)
                 System.out.print("=");
-
-            // iterates through each line of the file
-            for (String product : products) {
-
-                // I'm using StringBuilders here to hold the products' data because I'm going to be changing them
-                // many, many times, and I know it's a better idea to use StringBuilders than Strings for this.
-                StringBuilder id = new StringBuilder(),
-                        name = new StringBuilder(),
-                        description = new StringBuilder(),
-                        price = new StringBuilder();
-
-                int i; // declares a pointer for iterating, so it can save its spot in the product String
-
-                // iterates over the line until it hits a comma, adding everything into the ID String
-                for (i = 0; i < product.length() && product.charAt(i) != ','; i++) {
-                    id.append(product.charAt(i));
-                }
-
-                // repeats for the rest of the StringBuilders
-                for (i = i + 2; i < product.length() && product.charAt(i) != ','; i++) {
-                    name.append(product.charAt(i));
-                }
-
-                for (i = i + 2; i < product.length() && product.charAt(i) != ','; i++) {
-                    description.append(product.charAt(i));
-                }
-
-                for (i = i + 2; i < product.length() && product.charAt(i) != ','; i++) {
-                    price.append(product.charAt(i));
-                }
-
-                // calculates the final widths of each column
-                int width1 = Math.max(id.length(), 8);
-                int width2 = Math.max(id.length(), 16);
-                int width3 = Math.max(id.length(), 55);
-                int width4 = Math.max(id.length(), 8);
-
-                // finally prints the finished row
-                System.out.printf("%n%" + width1 + "s   %" + width2 + "s   %" + width3 + "s   %" + width4 + "s", id, name, description, price);
-            }
             System.out.println();
+
+            // iterates through the list of products and prints each row of the table using a method
+            for (Product product : products)
+                System.out.println(product.getAsTableRow());
         }
     }
 }
